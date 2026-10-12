@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<declaration taxpayer="Коваленко Іван Олександрович">
+    <incomes>
+        <employment source="ТОВ 'Технологічні Системи'" amount="600000.0" mainJob="true" children="2"/>
+        <employment source="ТОВ 'Академія ІТ'" amount="120000.0" mainJob="false" children="0"/>
+        <royalty source="Видавництво 'Основи' (підручник з Java)" amount="85000.0" expenses="15000.0"/>
+        <propertySale source="Продаж квартири" amount="1500000.0" firstSale="true"/>
+        <propertySale source="Продаж авто" amount="300000.0" firstSale="false"/>
+        <gift source="Грошовий подарунок від батьків" amount="200000.0" immediateFamily="true"/>
+        <gift source="Подарунок від партнера" amount="50000.0" immediateFamily="false"/>
+        <foreignTransfer source="Контракт Upwork (розробка ПЗ)" amount="5000.0" currency="USD" exchangeRate="41.50"/>
+        <financialAid source="Профспілкова матеріальна допомога" amount="10000.0" limit="4240.0"/>
+    </incomes>
+</declaration>
