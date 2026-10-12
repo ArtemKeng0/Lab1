@@ -1,140 +1,131 @@
-# Лабораторна робота №1: Система розрахунку річних податкових виплат фізичної особи
+# Laboratory Work 1: Annual Individual Tax Calculator
 
-Консольний Java-додаток, розроблений відповідно до принципів об'єктно-орієнтованого програмування (ООП) та вимог **Java Code Convention**.
-
----
-
-## 📋 Постановка завдання
-
-**Тема:** Податки.  
-**Мета:** Визначити множину та суму податкових виплат фізичної особи за рік з урахуванням:
-- Доходів з основного та додаткового місць роботи;
-- Авторських винагород (роялті);
-- Продажу майна (рухомого та нерухомого);
-- Отримання в подарунок грошових сум і майна;
-- Переказів з-за кордону;
-- Пільг на дітей (податкова соціальна пільга за основним місцем роботи);
-- Матеріальної допомоги (з урахуванням неоподатковуваного ліміту).  
-**Обов'язкова вимога:** Провести сортування податків за сумою.
+Console Java application developed according to Object-Oriented Programming (OOP) principles and Java Code Conventions.
 
 ---
 
-## 🏛️ Дотримання вимог та принципи ООП
+## 📋 Task Description
 
-1. **Інкапсуляція:**
-   - Усі поля класів оголошені як `private final`.
-   - Доступ до значень здійснюється виключно через селектори (геттери).
-   - Сувора валідація параметрів у конструкторах (заборона від'ємних сум, від'ємної кількості дітей, порожніх назв).
-
-2. **Обґрунтоване успадкування:**
-   - Базовий абстрактний клас `Income` визначає спільні атрибути для будь-якого виду доходу (`sourceName`, `amount`) та оголошує поліморфні контракти.
-   - Підкласи реалізують специфічні правила оподаткування:
-     - `EmploymentIncome` — трудові доходи: основне та додаткове місце роботи, соціальна пільга на дітей.
-     - `RoyaltyIncome` — авторські винагороди: зменшення оподатковуваної бази на документально підтверджені витрати автора.
-     - `PropertySaleIncome` — продаж майна: перший продаж за рік звільнений від оподаткування (0%), наступні продажі оподатковуються за ставкою 6.5%.
-     - `GiftIncome` — грошові суми та майно в подарунок: від найближчих родичів — 0%, від інших осіб — 6.5%.
-     - `ForeignTransferIncome` — іноземні перекази: конвертація за курсом валюти та нарахування податку.
-     - `FinancialAidIncome` — нецільова матеріальна допомога: наявність неоподатковуваного ліміту, оподаткування лише надлишку.
-
-3. **Поліморфізм:**
-   - Поліморфний метод `public abstract double calculateTax()` викликається для кожного об'єкта зі списку доходів без потреби перевірки типів (`instanceof`) чи розгалужень.
-
-4. **Множина та сортування:**
-   - Клас `TaxPayment` представляє окрему податкову виплату, реалізує інтерфейс `Comparable<TaxPayment>` для сортування за сумою та перевизначає `equals`/`hashCode`.
-   - Метод `getTaxPayments()` повертає `Set<TaxPayment>` — математичну множину унікальних податкових зобов'язань.
-   - Методи `getSortedTaxes()` та `getSortedTaxesDescending()` забезпечують сортування за сумою.
-
-5. **Збереження параметрів у файлах (XML):**
-   - Клас `XMLConfigLoader` дозволяє зчитувати та зберігати конфігурацію декларації у форматі XML за допомогою стандартного Java DOM API (`javax.xml`) без додаткових залежностей.
+**Topic:** Taxes.  
+**Goal:** Determine the set and total amount of annual tax payments for an individual, taking into account:
+- Incomes from main and secondary employment;
+- Royalty fees;
+- Property sales (movable and immovable);
+- Cash and property gifts;
+- Foreign money transfers;
+- Child tax benefits;
+- Financial aid (with a non-taxable threshold).  
+**Required feature:** Sort tax payments by amount.
 
 ---
 
-## 📦 Структура проєкту (відповідно до шаблону)
+## 🏛️ OOP Architecture
+
+1. **Encapsulation:**
+   - All fields are `private final`.
+   - Access via getters.
+   - Input validation in constructors.
+
+2. **Inheritance & Hierarchy:**
+   - Abstract class `Income` serves as the base for all income streams.
+   - Subclasses model specific tax rules:
+     - `EmploymentIncome`: main vs secondary job, child benefit reduction.
+     - `RoyaltyIncome`: reduction of taxable base by documented author expenses.
+     - `PropertySaleIncome`: first sale exemption (0%), subsequent sales at 6.5%.
+     - `GiftIncome`: immediate family exemption (0%), other gifts at 6.5%.
+     - `ForeignTransferIncome`: currency conversion by exchange rate and 19.5% tax.
+     - `FinancialAidIncome`: non-taxable threshold, 19.5% tax on excess only.
+
+3. **Polymorphism:**
+   - Polymorphic method `calculateTax()` eliminates `instanceof` and `switch` statements.
+
+4. **Set & Sorting:**
+   - `TaxPayment` represents a single tax obligation and implements `Comparable<TaxPayment>`.
+   - `TaxDeclaration.getTaxPayments()` returns a `Set<TaxPayment>` guaranteeing uniqueness.
+   - `getSortedTaxes()` and `getSortedTaxesDescending()` provide sorting by amount.
+   - `findTaxesByAmountRange(min, max)` filters payments in a given range.
+
+5. **Initialization Parameters (XML):**
+   - `XMLConfigLoader` loads and saves declarations using standard Java DOM API (`javax.xml`).
+
+---
+
+## 📦 Project Layout
 
 ```
 lab1
-├── pom.xml                                     # Конфігурація Maven
-├── README.md                                   # Документація проєкту
-├── .gitignore                                  # Виключення тимчасових файлів
+├── pom.xml                                     # Maven configuration
+├── README.md                                   # Documentation
+├── .gitignore                                  # Git ignore rules
+├── mvnw / mvnw.cmd                             # Maven wrapper scripts
 └── src
     ├── main
     │   ├── java/com/lab1
     │   │   ├── app
-    │   │   │   └── Main.java                   # Точка входу, консольне меню та демо
+    │   │   │   └── Main.java                   # Entry point and minimal console menu
     │   │   ├── config
-    │   │   │   └── XMLConfigLoader.java        # Завантаження та збереження XML
+    │   │   │   └── XMLConfigLoader.java        # XML configuration loader
     │   │   ├── tax
-    │   │   │   ├── TaxDeclaration.java         # Річна податкова декларація (агрегатор)
-    │   │   │   └── TaxPayment.java             # Податковий платіж (Comparable)
+    │   │   │   ├── TaxDeclaration.java         # Aggregator container
+    │   │   │   └── TaxPayment.java             # Comparable tax payment
     │   │   └── income
-    │   │       ├── Income.java                 # Базовий абстрактний клас доходів
-    │   │       ├── EmploymentIncome.java       # Доходи за основним та додатковим місцем
-    │   │       ├── RoyaltyIncome.java          # Авторські винагороди (роялті)
-    │   │       ├── PropertySaleIncome.java     # Продаж рухомого та нерухомого майна
-    │   │       ├── GiftIncome.java             # Грошові подарунки та подарунки майна
-    │   │       ├── ForeignTransferIncome.java  # Перекази з-за кордону
-    │   │       └── FinancialAidIncome.java     # Матеріальна допомога
+    │   │       ├── Income.java                 # Base abstract class
+    │   │       ├── EmploymentIncome.java       # Employment income & child benefits
+    │   │       ├── RoyaltyIncome.java          # Royalty & documented expenses
+    │   │       ├── PropertySaleIncome.java     # Property sales
+    │   │       ├── GiftIncome.java             # Gifts
+    │   │       ├── ForeignTransferIncome.java  # Foreign transfers
+    │   │       └── FinancialAidIncome.java     # Financial aid
     │   └── resources
-    │       └── taxes.xml                       # Файл початкових параметрів
+    │       └── taxes.xml                       # Default XML parameters
     └── test
         ├── java/com/lab1
         │   ├── config
-        │   │   └── XMLConfigLoaderTest.java    # Тести XML-завантажувача
+        │   │   └── XMLConfigLoaderTest.java    # XML loader tests
         │   ├── tax
-        │   │   ├── TaxDeclarationTest.java     # Тести декларації з Mockito
-        │   │   └── TaxPaymentTest.java         # Тести платежів та сортування
+        │   │   ├── TaxDeclarationTest.java     # Aggregator tests with Mockito
+        │   │   └── TaxPaymentTest.java         # TaxPayment & sorting tests
         │   └── income
-        │       ├── IncomeTest.java             # Тести базового класу
-        │       ├── EmploymentIncomeTest.java   # Тести заробітної плати та пільг
-        │       ├── RoyaltyIncomeTest.java      # Тести роялті та витрат
-        │       ├── PropertySaleIncomeTest.java # Тести продажу майна
-        │       ├── GiftIncomeTest.java         # Тести подарунків
-        │       ├── ForeignTransferIncomeTest.java # Тести валютних переказів
-        │       └── FinancialAidIncomeTest.java # Тести матеріальної допомоги
+        │       ├── IncomeTest.java
+        │       ├── EmploymentIncomeTest.java
+        │       ├── RoyaltyIncomeTest.java
+        │       ├── PropertySaleIncomeTest.java
+        │       ├── GiftIncomeTest.java
+        │       ├── ForeignTransferIncomeTest.java
+        │       └── FinancialAidIncomeTest.java
         └── resources
             └── mockito-extensions
-                └── org.mockito.plugins.MockMaker # Налаштування Mockito для нових версій JDK
+                └── org.mockito.plugins.MockMaker
 ```
 
 ---
 
-## 🧪 Тестування (JUnit 5 + Mockito)
+## 🧪 Testing (JUnit 5 + Mockito)
 
-Усі 36 модульних тестів перевіряють коректність бізнес-правил та поведінку класів у граничних ситуаціях.
-
-Запуск тестів:
+Run test suite:
 ```bash
-mvn test
+./mvnw test
+```
+or on Windows:
+```powershell
+.\mvnw.cmd test
 ```
 
 ---
 
-## 🚀 Збірка та запуск
+## 🚀 Build & Run
 
-### 1. Збірка JAR:
+### 1. Build JAR:
 ```bash
-mvn clean package
+.\mvnw.cmd clean package
 ```
 
-### 2. Запуск в інтерактивному режимі (консольне меню):
+### 2. Interactive Console Menu:
 ```bash
 java -jar target/lab1-tax-calculator-1.0.0-jar-with-dependencies.jar
 ```
 
-### 3. Автоматичний демонстраційний запуск:
+### 3. Demo Mode:
 ```bash
 java -jar target/lab1-tax-calculator-1.0.0-jar-with-dependencies.jar --demo
-```
-
----
-
-## 🌐 Розміщення на GitHub / GitLab
-
-Репозиторій локально ініціалізовано з гілкою `main`, налаштованим `.gitignore` та послідовними комітами.
-
-Для публікації на власному акаунті GitHub:
-```bash
-git remote add origin https://github.com/<ваш-логін>/<назва-репозиторію>.git
-git branch -M main
-git push -u origin main
 ```

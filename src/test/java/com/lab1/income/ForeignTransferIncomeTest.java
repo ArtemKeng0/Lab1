@@ -9,11 +9,10 @@ class ForeignTransferIncomeTest {
 
     @Test
     void testForeignTransferCalculation() {
-        // 1000 USD * 40.0 = 40000 грн. Податок: 40000 * 0.195 = 7800.0 грн.
         ForeignTransferIncome transfer = new ForeignTransferIncome("Upwork", 1000.0, "USD", 40.0);
         assertEquals("USD", transfer.getCurrencyCode());
         assertEquals(40.0, transfer.getExchangeRate());
-        assertEquals(40000.0, transfer.getAmountInUah());
+        assertEquals(40000.0, transfer.getAmountInLocalCurrency());
         assertEquals(7800.0, transfer.calculateTax());
     }
 

@@ -2,29 +2,18 @@ package com.lab1.tax;
 
 import java.util.Objects;
 
-/**
- * Клас, що представляє окреме податкове зобов'язання (платіж).
- * Реалізує інтерфейс Comparable для природного сортування за сумою податку.
- */
 public class TaxPayment implements Comparable<TaxPayment> {
 
     private final String sourceName;
     private final String taxDescription;
     private final double taxAmount;
 
-    /**
-     * Конструктор податкового платежу.
-     *
-     * @param sourceName     джерело доходу
-     * @param taxDescription опис ставки або типу податку
-     * @param taxAmount      сума податкової виплати
-     */
     public TaxPayment(String sourceName, String taxDescription, double taxAmount) {
         if (sourceName == null || sourceName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Назва джерела не може бути порожньою.");
+            throw new IllegalArgumentException("Source name cannot be empty.");
         }
         if (taxAmount < 0) {
-            throw new IllegalArgumentException("Сума податку не може бути від'ємною: " + taxAmount);
+            throw new IllegalArgumentException("Tax amount cannot be negative: " + taxAmount);
         }
         this.sourceName = sourceName.trim();
         this.taxDescription = (taxDescription != null) ? taxDescription.trim() : "";
@@ -43,9 +32,6 @@ public class TaxPayment implements Comparable<TaxPayment> {
         return taxAmount;
     }
 
-    /**
-     * Порівняння за сумою податку для забезпечення сортування.
-     */
     @Override
     public int compareTo(TaxPayment other) {
         if (other == null) {
@@ -55,7 +41,6 @@ public class TaxPayment implements Comparable<TaxPayment> {
         if (cmp != 0) {
             return cmp;
         }
-        // За однакової суми порівнюємо за назвою джерела
         return this.sourceName.compareTo(other.sourceName);
     }
 
@@ -79,7 +64,7 @@ public class TaxPayment implements Comparable<TaxPayment> {
 
     @Override
     public String toString() {
-        return String.format("Податок: %.2f грн | Джерело: %-25s | Примітка: %s",
+        return String.format("Tax: %.2f | Source: %-30s | Note: %s",
                 taxAmount, sourceName, taxDescription);
     }
 }

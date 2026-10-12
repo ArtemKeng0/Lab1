@@ -17,26 +17,20 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
-/**
- * Головний клас консольного додатку.
- * Реалізує мінімальне консольне меню для демонстрації можливостей програми.
- */
 public class Main {
 
     public static void main(String[] args) {
-        // Забезпечуємо коректне виведення символів Unicode в консолі Windows
         try {
             System.setOut(new java.io.PrintStream(System.out, true, StandardCharsets.UTF_8));
         } catch (Exception ignored) {
         }
 
         System.out.println("================================================================================");
-        System.out.println("   СИСТЕМА РОЗРАХУНКУ РІЧНИХ ПОДАТКОВИХ ВИПЛАТ ФІЗИЧНОЇ ОСОБИ (ЛАБ. 1)");
+        System.out.println("          ANNUAL PERSONAL INCOME TAX CALCULATOR SYSTEM (LAB 1)");
         System.out.println("================================================================================");
 
         TaxDeclaration declaration = loadInitialDeclaration();
 
-        // Якщо передано прапорець --demo або відсутній інтерактивний термінал
         if (args != null && args.length > 0 && "--demo".equalsIgnoreCase(args[0])) {
             runFullDemo(declaration);
             return;
@@ -46,13 +40,13 @@ public class Main {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n--- ГОЛОВНЕ МЕНЮ ---");
-            System.out.println("1. Загальний огляд (доходи, множина податків та підсумкова сума)");
-            System.out.println("2. Сортування податкових виплат за сумою (за зростанням)");
-            System.out.println("3. Сортування податкових виплат за сумою (за спаданням)");
-            System.out.println("4. Пошук податків у заданому діапазоні сум");
-            System.out.println("0. Вихід");
-            System.out.print("Оберіть пункт меню: ");
+            System.out.println("\n--- MAIN MENU ---");
+            System.out.println("1. Overview (incomes, tax payments set and total tax)");
+            System.out.println("2. Sort tax payments by amount (ascending)");
+            System.out.println("3. Sort tax payments by amount (descending)");
+            System.out.println("4. Find tax payments in amount range");
+            System.out.println("0. Exit");
+            System.out.print("Select an option: ");
 
             if (!scanner.hasNextLine()) {
                 break;
@@ -73,18 +67,15 @@ public class Main {
                     handleSearchByRange(declaration, scanner);
                     break;
                 case "0":
-                    System.out.println("Завершення роботи програми. До побачення!");
+                    System.out.println("Exiting application. Goodbye!");
                     running = false;
                     break;
                 default:
-                    System.out.println("Невірний вибір. Спробуйте ще раз.");
+                    System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
-    /**
-     * Завантажує дані з XML або створює стандартну декларацію.
-     */
     public static TaxDeclaration loadInitialDeclaration() {
         XMLConfigLoader loader = new XMLConfigLoader();
         try (InputStream is = Main.class.getResourceAsStream("/taxes.xml")) {
@@ -92,31 +83,27 @@ public class Main {
                 return loader.loadFromStream(is);
             }
         } catch (Exception e) {
-            System.out.println("Попередження: не вдалося завантажити taxes.xml, створюємо тестові дані програмно.");
+            System.out.println("Warning: Could not load taxes.xml from resources, initializing fallback data.");
         }
 
-        // Резервна ініціалізація, якщо XML не знайдено
-        TaxDeclaration declaration = new TaxDeclaration("Коваленко Іван Олександрович");
-        declaration.addIncome(new EmploymentIncome("Основна робота (IT Компанія)", 600000.0, true, 2));
-        declaration.addIncome(new EmploymentIncome("Сумісництво (Викладач)", 120000.0, false, 0));
-        declaration.addIncome(new RoyaltyIncome("Видання наукової монографії", 85000.0, 15000.0));
-        declaration.addIncome(new PropertySaleIncome("Продаж квартири", 1500000.0, true));
-        declaration.addIncome(new PropertySaleIncome("Продаж авто", 300000.0, false));
-        declaration.addIncome(new GiftIncome("Грошовий подарунок від батьків", 200000.0, true));
-        declaration.addIncome(new GiftIncome("Подарунок від партнера", 50000.0, false));
-        declaration.addIncome(new ForeignTransferIncome("Переказ від замовника зі США", 5000.0, "USD", 41.50));
-        declaration.addIncome(new FinancialAidIncome("Матеріальна допомога від фонду", 10000.0, 4240.0));
+        TaxDeclaration declaration = new TaxDeclaration("John Doe");
+        declaration.addIncome(new EmploymentIncome("Tech Systems Corp (Main Job)", 600000.0, true, 2));
+        declaration.addIncome(new EmploymentIncome("IT Academy (Secondary Job)", 120000.0, false, 0));
+        declaration.addIncome(new RoyaltyIncome("Publishing House (Java Book)", 85000.0, 15000.0));
+        declaration.addIncome(new PropertySaleIncome("Apartment Sale", 1500000.0, true));
+        declaration.addIncome(new PropertySaleIncome("Car Sale", 300000.0, false));
+        declaration.addIncome(new GiftIncome("Cash Gift from Parents", 200000.0, true));
+        declaration.addIncome(new GiftIncome("Gift from Business Partner", 50000.0, false));
+        declaration.addIncome(new ForeignTransferIncome("Upwork Software Contract", 5000.0, "USD", 41.50));
+        declaration.addIncome(new FinancialAidIncome("Trade Union Financial Aid", 10000.0, 4240.0));
         return declaration;
     }
 
-    /**
-     * Повний демонстраційний вивід усіх результатів.
-     */
     public static void runFullDemo(TaxDeclaration declaration) {
         displayOverview(declaration);
         displaySortedTaxes(declaration, true);
         displaySortedTaxes(declaration, false);
-        System.out.println("\n[ДЕМО] Пошук податків у діапазоні від 5 000 до 50 000 грн:");
+        System.out.println("\n[DEMO] Finding taxes in range [5000.00, 50000.00]:");
         List<TaxPayment> matched = declaration.findTaxesByAmountRange(5000.0, 50000.0);
         for (TaxPayment p : matched) {
             System.out.println("  * " + p);
@@ -125,34 +112,34 @@ public class Main {
 
     private static void displayOverview(TaxDeclaration declaration) {
         System.out.println("\n================================================================================");
-        System.out.println("Платник податків: " + declaration.getTaxpayerName());
+        System.out.println("Taxpayer: " + declaration.getTaxpayerName());
         System.out.println("--------------------------------------------------------------------------------");
-        System.out.println("1. ПЕРЕЛІК ДЖЕРЕЛ ДОХОДІВ:");
+        System.out.println("1. REGISTERED INCOMES:");
         for (Income inc : declaration.getIncomes()) {
-            System.out.printf("  - %-32s : %10.2f грн | %s%n",
+            System.out.printf("  - %-35s : %10.2f | %s%n",
                     inc.getSourceName(), inc.getAmount(), inc.getTaxDescription());
         }
 
-        System.out.println("\n2. МНОЖИНА НАРАХОВАНИХ ПОДАТКОВИХ ВИПЛАТ (Set<TaxPayment>):");
+        System.out.println("\n2. SET OF TAX PAYMENTS (Set<TaxPayment>):");
         Set<TaxPayment> payments = declaration.getTaxPayments();
         for (TaxPayment p : payments) {
-            System.out.println("  • " + p);
+            System.out.println("  * " + p);
         }
 
         System.out.println("--------------------------------------------------------------------------------");
-        System.out.printf("ЗАГАЛЬНА СУМА ПОДАТКОВИХ ВИПЛАТ ЗА РІК: %.2f грн%n", declaration.calculateTotalTax());
+        System.out.printf("TOTAL ANNUAL TAX OBLIGATION: %.2f%n", declaration.calculateTotalTax());
         System.out.println("================================================================================");
     }
 
     private static void displaySortedTaxes(TaxDeclaration declaration, boolean ascending) {
         System.out.println("\n================================================================================");
-        System.out.printf("РЕЗУЛЬТАТ СОРТУВАННЯ ПОДАТКІВ ЗА СУМОЮ (%s):%n",
-                ascending ? "ЗА ЗРОСТАННЯМ" : "ЗА СПАДАННЯМ");
+        System.out.printf("TAX PAYMENTS SORTED BY AMOUNT (%s):%n",
+                ascending ? "ASCENDING" : "DESCENDING");
         System.out.println("--------------------------------------------------------------------------------");
         List<TaxPayment> sorted = ascending ? declaration.getSortedTaxes() : declaration.getSortedTaxesDescending();
         int index = 1;
         for (TaxPayment p : sorted) {
-            System.out.printf("%2d. %-35s -> %10.2f грн (%s)%n",
+            System.out.printf("%2d. %-35s -> %10.2f (%s)%n",
                     index++, p.getSourceName(), p.getTaxAmount(), p.getTaxDescription());
         }
         System.out.println("================================================================================");
@@ -160,20 +147,20 @@ public class Main {
 
     private static void handleSearchByRange(TaxDeclaration declaration, Scanner scanner) {
         try {
-            System.out.print("Введіть мінімальну суму податку: ");
+            System.out.print("Enter minimum tax amount: ");
             double min = Double.parseDouble(scanner.nextLine().trim());
-            System.out.print("Введіть максимальну суму податку: ");
+            System.out.print("Enter maximum tax amount: ");
             double max = Double.parseDouble(scanner.nextLine().trim());
 
             List<TaxPayment> found = declaration.findTaxesByAmountRange(min, max);
-            System.out.printf("\nЗнайдено податків у діапазоні від %.2f до %.2f грн: %d%n", min, max, found.size());
+            System.out.printf("\nFound %d tax payment(s) in range [%.2f, %.2f]:%n", found.size(), min, max);
             for (TaxPayment p : found) {
-                System.out.println("  • " + p);
+                System.out.println("  * " + p);
             }
         } catch (NumberFormatException e) {
-            System.out.println("Помилка: введено некоректне числове значення.");
+            System.out.println("Error: Invalid numeric input.");
         } catch (IllegalArgumentException e) {
-            System.out.println("Помилка: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }

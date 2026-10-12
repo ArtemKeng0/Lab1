@@ -8,24 +8,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Річна податкова декларація фізичної особи.
- * Зберігає перелік доходів, формує множину податкових виплат,
- * обчислює загальну суму та надає методи сортування і пошуку податків.
- */
 public class TaxDeclaration {
 
     private final String taxpayerName;
     private final List<Income> incomes;
 
-    /**
-     * Конструктор декларації платника податків.
-     *
-     * @param taxpayerName ПІБ платника податків
-     */
     public TaxDeclaration(String taxpayerName) {
         if (taxpayerName == null || taxpayerName.trim().isEmpty()) {
-            throw new IllegalArgumentException("ПІБ платника податків не може бути порожнім.");
+            throw new IllegalArgumentException("Taxpayer name cannot be empty.");
         }
         this.taxpayerName = taxpayerName.trim();
         this.incomes = new ArrayList<>();
@@ -35,51 +25,29 @@ public class TaxDeclaration {
         return taxpayerName;
     }
 
-    /**
-     * Додає новий дохід до декларації.
-     *
-     * @param income об'єкт доходу
-     */
     public void addIncome(Income income) {
         if (income == null) {
-            throw new IllegalArgumentException("Об'єкт доходу не може бути null.");
+            throw new IllegalArgumentException("Income cannot be null.");
         }
         this.incomes.add(income);
     }
 
-    /**
-     * Повертає незмінний список зареєстрованих доходів.
-     *
-     * @return список доходів
-     */
     public List<Income> getIncomes() {
         return Collections.unmodifiableList(incomes);
     }
 
-    /**
-     * Формує множину (Set) усіх податкових виплат фізичної особи.
-     * Множина гарантує відсутність дублікатів однакових нарахувань.
-     *
-     * @return множина податкових платежів
-     */
     public Set<TaxPayment> getTaxPayments() {
         Set<TaxPayment> payments = new LinkedHashSet<>();
         for (Income income : incomes) {
-            TaxPayment payment = new TaxPayment(
+            payments.add(new TaxPayment(
                     income.getSourceName(),
                     income.getTaxDescription(),
                     income.calculateTax()
-            );
-            payments.add(payment);
+            ));
         }
         return payments;
     }
 
-    /**
-     * Обчислює загальну суму всіх нарахованих податкових виплат за рік.
-     *
-     * @return загальна сума податків
-     */
     public double calculateTotalTax() {
         double total = 0.0;
         for (Income income : incomes) {
@@ -88,38 +56,21 @@ public class TaxDeclaration {
         return Math.round(total * 100.0) / 100.0;
     }
 
-    /**
-     * Повертає список податків, відсортований за зростанням суми.
-     *
-     * @return відсортований список податкових платежів
-     */
     public List<TaxPayment> getSortedTaxes() {
-        List<TaxPayment> sortedList = new ArrayList<>(getTaxPayments());
-        Collections.sort(sortedList);
-        return sortedList;
+        List<TaxPayment> list = new ArrayList<>(getTaxPayments());
+        Collections.sort(list);
+        return list;
     }
 
-    /**
-     * Повертає список податків, відсортований за спаданням суми.
-     *
-     * @return відсортований список податкових платежів
-     */
     public List<TaxPayment> getSortedTaxesDescending() {
-        List<TaxPayment> sortedList = new ArrayList<>(getTaxPayments());
-        sortedList.sort(Collections.reverseOrder());
-        return sortedList;
+        List<TaxPayment> list = new ArrayList<>(getTaxPayments());
+        list.sort(Collections.reverseOrder());
+        return list;
     }
 
-    /**
-     * Знаходить усі податкові платежі, сума яких потрапляє у заданий діапазон.
-     *
-     * @param minAmount мінімальна межа (включно)
-     * @param maxAmount максимальна межа (включно)
-     * @return список знайдених платежів
-     */
     public List<TaxPayment> findTaxesByAmountRange(double minAmount, double maxAmount) {
         if (minAmount > maxAmount) {
-            throw new IllegalArgumentException("Мінімальна сума не може перевищувати максимальну.");
+            throw new IllegalArgumentException("Minimum amount cannot exceed maximum amount.");
         }
         List<TaxPayment> matches = new ArrayList<>();
         for (TaxPayment payment : getTaxPayments()) {

@@ -11,17 +11,17 @@ class TaxPaymentTest {
 
     @Test
     void testValidCreation() {
-        TaxPayment payment = new TaxPayment("Зарплата", "ПДФО 18%", 5400.0);
-        assertEquals("Зарплата", payment.getSourceName());
-        assertEquals("ПДФО 18%", payment.getTaxDescription());
+        TaxPayment payment = new TaxPayment("Salary", "PIT 18%", 5400.0);
+        assertEquals("Salary", payment.getSourceName());
+        assertEquals("PIT 18%", payment.getTaxDescription());
         assertEquals(5400.0, payment.getTaxAmount());
     }
 
     @Test
     void testInvalidCreationThrows() {
-        assertThrows(IllegalArgumentException.class, () -> new TaxPayment(null, "ПДФО", 100.0));
-        assertThrows(IllegalArgumentException.class, () -> new TaxPayment("  ", "ПДФО", 100.0));
-        assertThrows(IllegalArgumentException.class, () -> new TaxPayment("Зарплата", "ПДФО", -1.0));
+        assertThrows(IllegalArgumentException.class, () -> new TaxPayment(null, "PIT", 100.0));
+        assertThrows(IllegalArgumentException.class, () -> new TaxPayment("  ", "PIT", 100.0));
+        assertThrows(IllegalArgumentException.class, () -> new TaxPayment("Salary", "PIT", -1.0));
     }
 
     @Test
@@ -32,7 +32,7 @@ class TaxPaymentTest {
 
         assertTrue(p1.compareTo(p2) < 0);
         assertTrue(p2.compareTo(p1) > 0);
-        assertTrue(p1.compareTo(p3) < 0); // за назвою "A" < "C"
+        assertTrue(p1.compareTo(p3) < 0);
     }
 
     @Test

@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,10 +30,10 @@ class XMLConfigLoaderTest {
     void testLoadFromStreamValidXml() throws Exception {
         String xml = """
                 <?xml version="1.0" encoding="UTF-8"?>
-                <declaration taxpayer="Петренко Петро">
+                <declaration taxpayer="Peter Smith">
                     <incomes>
                         <employment source="IT Corp" amount="100000.0" mainJob="true" children="1"/>
-                        <propertySale source="Авто" amount="200000.0" firstSale="false"/>
+                        <propertySale source="Car" amount="200000.0" firstSale="false"/>
                     </incomes>
                 </declaration>
                 """;
@@ -43,7 +42,7 @@ class XMLConfigLoaderTest {
         TaxDeclaration declaration = loader.loadFromStream(is);
 
         assertNotNull(declaration);
-        assertEquals("Петренко Петро", declaration.getTaxpayerName());
+        assertEquals("Peter Smith", declaration.getTaxpayerName());
         assertEquals(2, declaration.getIncomes().size());
     }
 
@@ -51,9 +50,9 @@ class XMLConfigLoaderTest {
     void testSaveAndLoadRoundTrip(@TempDir Path tempDir) throws Exception {
         File file = tempDir.resolve("test_taxes.xml").toFile();
 
-        TaxDeclaration original = new TaxDeclaration("Сидоренко Анна");
-        original.addIncome(new EmploymentIncome("Школа", 50000.0, true, 2));
-        original.addIncome(new PropertySaleIncome("Квартира", 800000.0, true));
+        TaxDeclaration original = new TaxDeclaration("Anna Brown");
+        original.addIncome(new EmploymentIncome("School", 50000.0, true, 2));
+        original.addIncome(new PropertySaleIncome("Apartment", 800000.0, true));
 
         loader.saveToFile(original, file);
         assertTrue(file.exists());

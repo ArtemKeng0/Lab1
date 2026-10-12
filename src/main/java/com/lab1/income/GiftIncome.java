@@ -1,23 +1,11 @@
 package com.lab1.income;
 
-/**
- * Отримання в подарунок грошових сум або майна.
- * Подарунки від членів сім'ї першого ступеня споріднення оподатковуються за ставкою 0%.
- * Подарунки від інших осіб оподатковуються за ставкою 6.5% (5% ПДФО + 1.5% Військовий збір).
- */
 public class GiftIncome extends Income {
 
-    public static final double STANDARD_GIFT_TAX_RATE = 0.065; // 5% ПДФО + 1.5% ВЗ
+    public static final double STANDARD_GIFT_TAX_RATE = 0.065;
 
     private final boolean isImmediateFamily;
 
-    /**
-     * Конструктор доходу у вигляді подарунка.
-     *
-     * @param sourceName        опис подарунка (наприклад, "Грошовий переказ від батьків", "Авто від колеги")
-     * @param amount            вартість подарованого майна або грошова сума
-     * @param isImmediateFamily чи отримано від члена сім'ї 1-го ступеня споріднення
-     */
     public GiftIncome(String sourceName, double amount, boolean isImmediateFamily) {
         super(sourceName, amount);
         this.isImmediateFamily = isImmediateFamily;
@@ -38,8 +26,8 @@ public class GiftIncome extends Income {
     @Override
     public String getTaxDescription() {
         if (isImmediateFamily) {
-            return "Подарунок від найближчого родича (пільгова ставка 0%)";
+            return "Gift from immediate family member (tax exempt 0%)";
         }
-        return "Подарунок від інших осіб (6.5%: 5% ПДФО + 1.5% ВЗ)";
+        return "Gift from other individuals (6.5% rate)";
     }
 }

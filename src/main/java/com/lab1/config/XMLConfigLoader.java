@@ -23,22 +23,11 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.InputStream;
 
-/**
- * Клас для завантаження та збереження параметрів ініціалізації у форматі XML.
- * Відповідає вимозі збереження параметрів у файлах без використання сторонніх бібліотек.
- */
 public class XMLConfigLoader {
 
-    /**
-     * Завантажує податкову декларацію з файлу XML.
-     *
-     * @param file XML-файл з даними
-     * @return ініціалізований об'єкт TaxDeclaration
-     * @throws Exception у разі помилки читання чи парсингу
-     */
     public TaxDeclaration loadFromFile(File file) throws Exception {
         if (file == null || !file.exists()) {
-            throw new IllegalArgumentException("Файл конфігурації не знайдено: " + file);
+            throw new IllegalArgumentException("Configuration file not found: " + file);
         }
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -46,16 +35,9 @@ public class XMLConfigLoader {
         return parseDocument(doc);
     }
 
-    /**
-     * Завантажує податкову декларацію з потоку InputStream (наприклад, з ресурсів).
-     *
-     * @param inputStream потік вхідних даних
-     * @return ініціалізований об'єкт TaxDeclaration
-     * @throws Exception у разі помилки читання чи парсингу
-     */
     public TaxDeclaration loadFromStream(InputStream inputStream) throws Exception {
         if (inputStream == null) {
-            throw new IllegalArgumentException("Вхідний потік не може бути null.");
+            throw new IllegalArgumentException("Input stream cannot be null.");
         }
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -63,15 +45,12 @@ public class XMLConfigLoader {
         return parseDocument(doc);
     }
 
-    /**
-     * Парсить DOM-документ XML у об'єкт декларації.
-     */
     private TaxDeclaration parseDocument(Document doc) {
         doc.getDocumentElement().normalize();
         Element root = doc.getDocumentElement();
         String taxpayerName = root.getAttribute("taxpayer");
         if (taxpayerName == null || taxpayerName.trim().isEmpty()) {
-            taxpayerName = "Невідомий платник";
+            taxpayerName = "Unknown Taxpayer";
         }
 
         TaxDeclaration declaration = new TaxDeclaration(taxpayerName);
@@ -146,13 +125,6 @@ public class XMLConfigLoader {
         }
     }
 
-    /**
-     * Зберігає декларацію у файл XML.
-     *
-     * @param declaration об'єкт декларації
-     * @param targetFile  цільовий файл для збереження
-     * @throws Exception у разі помилки збереження
-     */
     public void saveToFile(TaxDeclaration declaration, File targetFile) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();

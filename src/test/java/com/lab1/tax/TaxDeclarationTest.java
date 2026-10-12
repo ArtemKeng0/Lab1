@@ -30,12 +30,12 @@ class TaxDeclarationTest {
 
     @BeforeEach
     void setUp() {
-        declaration = new TaxDeclaration("Іванов Іван");
+        declaration = new TaxDeclaration("John Doe");
     }
 
     @Test
     void testConstructorValid() {
-        assertEquals("Іванов Іван", declaration.getTaxpayerName());
+        assertEquals("John Doe", declaration.getTaxpayerName());
         assertTrue(declaration.getIncomes().isEmpty());
     }
 
@@ -67,8 +67,8 @@ class TaxDeclarationTest {
 
     @Test
     void testGetTaxPaymentsReturnsSet() {
-        when(mockIncome1.getSourceName()).thenReturn("Робота");
-        when(mockIncome1.getTaxDescription()).thenReturn("ПДФО");
+        when(mockIncome1.getSourceName()).thenReturn("Job");
+        when(mockIncome1.getTaxDescription()).thenReturn("PIT");
         when(mockIncome1.calculateTax()).thenReturn(2000.0);
 
         declaration.addIncome(mockIncome1);
@@ -77,22 +77,22 @@ class TaxDeclarationTest {
         assertNotNull(payments);
         assertEquals(1, payments.size());
         TaxPayment p = payments.iterator().next();
-        assertEquals("Робота", p.getSourceName());
+        assertEquals("Job", p.getSourceName());
         assertEquals(2000.0, p.getTaxAmount());
     }
 
     @Test
     void testSortingTaxes() {
-        when(mockIncome1.getSourceName()).thenReturn("Джерело А");
-        when(mockIncome1.getTaxDescription()).thenReturn("Ставка 1");
+        when(mockIncome1.getSourceName()).thenReturn("Source A");
+        when(mockIncome1.getTaxDescription()).thenReturn("Rate 1");
         when(mockIncome1.calculateTax()).thenReturn(500.0);
 
-        when(mockIncome2.getSourceName()).thenReturn("Джерело Б");
-        when(mockIncome2.getTaxDescription()).thenReturn("Ставка 2");
+        when(mockIncome2.getSourceName()).thenReturn("Source B");
+        when(mockIncome2.getTaxDescription()).thenReturn("Rate 2");
         when(mockIncome2.calculateTax()).thenReturn(1500.0);
 
-        declaration.addIncome(mockIncome2); // спочатку більше
-        declaration.addIncome(mockIncome1); // потім менше
+        declaration.addIncome(mockIncome2);
+        declaration.addIncome(mockIncome1);
 
         List<TaxPayment> ascending = declaration.getSortedTaxes();
         assertEquals(500.0, ascending.get(0).getTaxAmount());
@@ -105,10 +105,10 @@ class TaxDeclarationTest {
 
     @Test
     void testFindTaxesByAmountRange() {
-        when(mockIncome1.getSourceName()).thenReturn("Джерело А");
+        when(mockIncome1.getSourceName()).thenReturn("Source A");
         when(mockIncome1.calculateTax()).thenReturn(300.0);
 
-        when(mockIncome2.getSourceName()).thenReturn("Джерело Б");
+        when(mockIncome2.getSourceName()).thenReturn("Source B");
         when(mockIncome2.calculateTax()).thenReturn(1200.0);
 
         declaration.addIncome(mockIncome1);
