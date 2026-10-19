@@ -25,9 +25,7 @@ public class Main {
         } catch (Exception ignored) {
         }
 
-        System.out.println("================================================================================");
         System.out.println("          ANNUAL PERSONAL INCOME TAX CALCULATOR SYSTEM (LAB 1)");
-        System.out.println("================================================================================");
 
         TaxDeclaration declaration = loadInitialDeclaration();
 
@@ -40,7 +38,7 @@ public class Main {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n--- MAIN MENU ---");
+            System.out.println("\nMAIN MENU");
             System.out.println("1. Overview (incomes, tax payments set and total tax)");
             System.out.println("2. Sort tax payments by amount (ascending)");
             System.out.println("3. Sort tax payments by amount (descending)");
@@ -111,9 +109,7 @@ public class Main {
     }
 
     private static void displayOverview(TaxDeclaration declaration) {
-        System.out.println("\n================================================================================");
         System.out.println("Taxpayer: " + declaration.getTaxpayerName());
-        System.out.println("--------------------------------------------------------------------------------");
         System.out.println("1. REGISTERED INCOMES:");
         for (Income inc : declaration.getIncomes()) {
             System.out.printf("  - %-35s : %10.2f | %s%n",
@@ -126,23 +122,18 @@ public class Main {
             System.out.println("  * " + p);
         }
 
-        System.out.println("--------------------------------------------------------------------------------");
         System.out.printf("TOTAL ANNUAL TAX OBLIGATION: %.2f%n", declaration.calculateTotalTax());
-        System.out.println("================================================================================");
     }
 
     private static void displaySortedTaxes(TaxDeclaration declaration, boolean ascending) {
-        System.out.println("\n================================================================================");
         System.out.printf("TAX PAYMENTS SORTED BY AMOUNT (%s):%n",
                 ascending ? "ASCENDING" : "DESCENDING");
-        System.out.println("--------------------------------------------------------------------------------");
         List<TaxPayment> sorted = ascending ? declaration.getSortedTaxes() : declaration.getSortedTaxesDescending();
         int index = 1;
         for (TaxPayment p : sorted) {
             System.out.printf("%2d. %-35s -> %10.2f (%s)%n",
                     index++, p.getSourceName(), p.getTaxAmount(), p.getTaxDescription());
         }
-        System.out.println("================================================================================");
     }
 
     private static void handleSearchByRange(TaxDeclaration declaration, Scanner scanner) {
