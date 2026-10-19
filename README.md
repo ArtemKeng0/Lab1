@@ -4,7 +4,7 @@ Console Java application developed according to Object-Oriented Programming (OOP
 
 ---
 
-## 📋 Task Description
+## Task Description
 
 **Topic:** Taxes.  
 **Goal:** Determine the set and total amount of annual tax payments for an individual, taking into account:
@@ -50,7 +50,7 @@ Console Java application developed according to Object-Oriented Programming (OOP
 
 ---
 
-## 📦 Project Layout
+## Project Layout
 
 ```
 lab1
@@ -100,7 +100,7 @@ lab1
 
 ---
 
-## 🧪 Testing (JUnit 5 + Mockito)
+## Testing (JUnit 5 + Mockito)
 
 Run test suite:
 ```bash
@@ -113,7 +113,7 @@ or on Windows:
 
 ---
 
-## 🚀 Build & Run
+## Build & Run
 
 ### 1. Build JAR:
 ```bash
